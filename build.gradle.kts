@@ -4,7 +4,11 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android) apply false
     id("org.jlleitschuh.gradle.ktlint") version "11.6.0"
 }
-
+buildscript {
+    dependencies {
+        classpath("com.google.dagger:hilt-android-gradle-plugin:2.48")
+    }
+}
 ktlint {
     reporters {
         reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.PLAIN)
