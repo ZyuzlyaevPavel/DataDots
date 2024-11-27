@@ -1,0 +1,22 @@
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.pvz.datadots.presentation.home.HomeFragment"
+        android:label="Home">
+        <action
+            android:id="@+id/action_homeFragment_to_resultsFragment"
+            app:destination="@id/resultsFragment">
+            <argument
+                android:name="count"
+                app:argType="integer" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/resultsFragment"
+        android:name="com.pvz.datadots.presentation.results.ResultsFragment"
+        android:label="Results" />
+</navigation>

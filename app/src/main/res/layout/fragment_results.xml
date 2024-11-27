@@ -6,14 +6,12 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <!-- RecyclerView для таблицы -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/pointsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1" />
 
-    <!-- График (MPAndroidChart) -->
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/lineChart"
         android:layout_width="match_parent"
