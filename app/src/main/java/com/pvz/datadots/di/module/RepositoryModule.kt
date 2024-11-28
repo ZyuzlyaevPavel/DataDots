@@ -1,5 +1,6 @@
 package com.pvz.datadots.di.module
 
+import com.pvz.datadots.data.db.PointDao
 import com.pvz.datadots.data.remote.api.PointsApi
 import com.pvz.datadots.data.repository.PointsRepositoryImpl
 import com.pvz.datadots.domain.repository.PointsRepository
@@ -15,6 +16,6 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun providePointsRepository(pointsApi: PointsApi): PointsRepository =
-        PointsRepositoryImpl(pointsApi)
+    fun providePointsRepository(pointsApi: PointsApi, pointDao: PointDao): PointsRepository =
+        PointsRepositoryImpl(pointsApi,pointDao)
 }

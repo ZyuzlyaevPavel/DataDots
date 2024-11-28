@@ -9,9 +9,6 @@
         <action
             android:id="@+id/action_homeFragment_to_resultsFragment"
             app:destination="@id/resultsFragment">
-            <argument
-                android:name="count"
-                app:argType="integer" />
         </action>
     </fragment>
 
