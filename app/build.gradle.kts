@@ -66,6 +66,9 @@ dependencies {
     implementation("androidx.navigation:navigation-ui-ktx:2.7.3")
     // Feature module support for Fragments
     implementation("androidx.navigation:navigation-dynamic-features-fragment:2.7.3")
+    //View Model
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
 
     // Testing
     testImplementation(libs.junit)

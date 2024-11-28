@@ -4,7 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
@@ -13,10 +16,13 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.pvz.datadots.R
 import com.pvz.datadots.databinding.FragmentResultsBinding
 import com.pvz.datadots.domain.model.Point
+import com.pvz.datadots.presentation.home.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ResultsFragment : Fragment() {
+
+    private val viewModel: ResultsViewModel by viewModels()
 
     private val binding by lazy {
         FragmentResultsBinding.inflate(layoutInflater)
@@ -27,27 +33,29 @@ class ResultsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        //val points = intent.getParcelableArrayListExtra<Point>("points") ?: emptyList()
-        val points = emptyList<Point>()
-        if (points.isEmpty()) {
-            //Toast.makeText(this, "Нет данных для отображения", Toast.LENGTH_SHORT).show()
-            //finish()
-        }
-        with(binding.pointsRecyclerView) {
-            layoutManager = LinearLayoutManager(context)
-            adapter = PointsAdapter(points)
+        viewModel.pointList.observe(viewLifecycleOwner) { points ->
+            if (points.isEmpty()) {
+                Toast.makeText(requireContext(), "Нет данных для отображения", Toast.LENGTH_SHORT).show()
+                findNavController().popBackStack()
+            }
+            with(binding.pointsRecyclerView) {
+                layoutManager = LinearLayoutManager(context)
+                adapter = PointsAdapter(points)
+            }
+
+            setupChart(points)
         }
 
-        setupChart(points)
-        return inflater.inflate(R.layout.fragment_results, container, false)
+        return binding.root
     }
 
     private fun setupChart(points: List<Point>) {
         val entries = points.sortedBy { it.x }.map { Entry(it.x, it.y) }
 
         val dataSet = LineDataSet(entries, "График точек").apply {
-            //color = resources.getColor(android.R.color.holo_blue_dark, theme)
-            //valueTextColor = resources.getColor(android.R.color.black, theme)
+            val theme = requireContext().theme
+            color = resources.getColor(android.R.color.holo_blue_dark, theme)
+            valueTextColor = resources.getColor(android.R.color.black, theme)
             setDrawCircles(true)
             setDrawCircleHole(false)
             lineWidth = 2f
