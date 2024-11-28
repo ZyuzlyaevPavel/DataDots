@@ -13,10 +13,8 @@ import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
-import com.pvz.datadots.R
 import com.pvz.datadots.databinding.FragmentResultsBinding
 import com.pvz.datadots.domain.model.Point
-import com.pvz.datadots.presentation.home.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -31,8 +29,8 @@ class ResultsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-
+    ): View {
+        viewModel.fetchPointsData()
         viewModel.pointList.observe(viewLifecycleOwner) { points ->
             if (points.isEmpty()) {
                 Toast.makeText(requireContext(), "Нет данных для отображения", Toast.LENGTH_SHORT).show()
@@ -76,5 +74,10 @@ class ResultsFragment : Fragment() {
             description.isEnabled = false
             invalidate()
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewModel.deleteAllPoints()
     }
 }
