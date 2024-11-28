@@ -1,7 +1,6 @@
 package com.pvz.datadots.data.repository
 
 import com.pvz.datadots.data.db.PointDao
-import com.pvz.datadots.data.db.PointEntity
 import com.pvz.datadots.data.mapper.PointMapper
 import com.pvz.datadots.data.remote.api.PointResponse
 import com.pvz.datadots.data.remote.api.PointsApi
