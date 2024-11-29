@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">DataDots</string>
+
+    <string-array name="dropdown_items">
+        <item>None</item>
+        <item>Linear</item>
+        <item>Cubic Bezier</item>
+    </string-array>
 </resources>
