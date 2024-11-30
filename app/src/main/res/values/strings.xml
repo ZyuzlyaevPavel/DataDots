@@ -1,9 +1,24 @@
 <resources>
     <string name="app_name">DataDots</string>
+    <string name="fragment_home_label">Домашняя страница</string>
+    <string name="graph_label">График точек</string>
+    <string name="home_layout_point_count_hint">Введите количество запрашиваемых точек</string>
+    <string name="home_layout_button_go_text">Поехали!</string>
+    <string name="home_toast_remote_error">Ошибка: %1$s</string>
+    <string name="home_toast_unknown_remote_error">Не удалось подключиться к серверу</string>
+    <string name="home_toast_value_error">Неверные входные данные</string>
+    <string name="fragment_results_label">Результаты</string>
+    <string name="results_layout_save_graph_button_text">Сохранить граф в файл</string>
+    <string name="results_layout_graph_mode_label">Режим сглаживания графика</string>
+    <string name="results_toast_no_file">Файл не выбран</string>
+    <string name="results_toast_no_data">Нет данных для отображения</string>
+    <string name="results_toast_success">График сохранен успешно</string>
+    <string name="results_toast_problem">Проблема с сохранением графика</string>
+    <string name="results_toast_error">Ошибка сохранения графика %1$s</string>
 
     <string-array name="dropdown_items">
-        <item>None</item>
-        <item>Linear</item>
-        <item>Cubic Bezier</item>
+        <item>Нет сглаживания</item>
+        <item>Линейное</item>
+        <item>Кубическая кривая Безье</item>
     </string-array>
 </resources>

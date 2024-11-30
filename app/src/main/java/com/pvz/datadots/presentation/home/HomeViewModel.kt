@@ -25,8 +25,8 @@ class HomeViewModel @Inject constructor(
     private val _navigationEvent = MutableSharedFlow<Unit>()
     val navigationEvent: SharedFlow<Unit> get() = _navigationEvent.asSharedFlow()
 
-    private val _errorEvent = MutableSharedFlow<String>()
-    val errorEvent: SharedFlow<String> get() = _errorEvent.asSharedFlow()
+    private val _errorEvent = MutableSharedFlow<PointFetchError>()
+    val errorEvent: SharedFlow<PointFetchError> get() = _errorEvent.asSharedFlow()
 
     fun setPointCount(count: String) {
         _pointCount.value = count
@@ -44,15 +44,15 @@ class HomeViewModel @Inject constructor(
                         _navigationEvent.emit(Unit)
                     } else {
                         Log.e("main", "fetchPoints() is unsuccessful error code ${response.code()}")
-                        _errorEvent.emit("Ошибка: ${response.code()}")
+                        _errorEvent.emit(PointFetchError.RemoteError(response.code()))
                     }
                 } catch (e: Exception) {
                     Log.e("main", "fetchPoints() exception", e)
-                    _errorEvent.emit("Не удалось подключиться к серверу")
+                    _errorEvent.emit(PointFetchError.UnknownRemoteError)
                 }
             } else {
                 Log.e("main", "count is null")
-                _errorEvent.emit("Неверное значение")
+                _errorEvent.emit(PointFetchError.ValueError)
             }
         }
     }

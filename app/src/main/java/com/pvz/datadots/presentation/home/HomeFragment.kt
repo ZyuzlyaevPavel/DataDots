@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.asLiveData
 import androidx.navigation.fragment.findNavController
+import com.pvz.datadots.R
 import com.pvz.datadots.databinding.FragmentHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -43,7 +44,15 @@ class HomeFragment : Fragment() {
             }
         }
 
-        viewModel.errorEvent.asLiveData().observe(viewLifecycleOwner) { message ->
+        viewModel.errorEvent.asLiveData().observe(viewLifecycleOwner) { error ->
+            val message = when(error){
+                is PointFetchError.RemoteError -> getString(
+                    R.string.home_toast_remote_error,
+                    error.responseCode
+                )
+                PointFetchError.UnknownRemoteError -> getString(R.string.home_toast_unknown_remote_error)
+                PointFetchError.ValueError -> getString(R.string.home_toast_value_error)
+            }
             Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
         }
         viewModel.pointCount.observe(viewLifecycleOwner) { text ->
