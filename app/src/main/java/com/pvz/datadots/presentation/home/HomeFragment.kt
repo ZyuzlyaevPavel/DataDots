@@ -48,7 +48,7 @@ class HomeFragment : Fragment() {
             val message = when(error){
                 is PointFetchError.RemoteError -> getString(
                     R.string.home_toast_remote_error,
-                    error.responseCode
+                    error.responseCode.toString()
                 )
                 PointFetchError.UnknownRemoteError -> getString(R.string.home_toast_unknown_remote_error)
                 PointFetchError.ValueError -> getString(R.string.home_toast_value_error)

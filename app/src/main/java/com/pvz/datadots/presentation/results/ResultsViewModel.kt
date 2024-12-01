@@ -1,13 +1,9 @@
 package com.pvz.datadots.presentation.results
 
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.mikephil.charting.charts.LineChart
 import com.pvz.datadots.domain.model.Point
 import com.pvz.datadots.domain.repository.PointsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,8 +11,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.io.File
-import java.io.FileOutputStream
 import javax.inject.Inject
 
 @HiltViewModel
