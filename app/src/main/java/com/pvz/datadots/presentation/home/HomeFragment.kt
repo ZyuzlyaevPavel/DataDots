@@ -63,10 +63,18 @@ class HomeFragment : Fragment() {
         }
 
         binding.btnGo.setOnClickListener {
-            val count =
-                binding.etPointCount.text.toString().toIntOrNull()
-            viewModel.fetchPoints(count)
+            val count = binding.etPointCount.text.toString().toIntOrNull()
+            if (count == null || count <= 0) {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.home_toast_invalid_point_count),
+                    Toast.LENGTH_LONG
+                ).show()
+            } else {
+                viewModel.fetchPoints(count)
+            }
         }
+
         binding.etPointCount.addTextChangedListener {
             viewModel.setPointCount(it.toString())
         }

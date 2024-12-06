@@ -7,6 +7,7 @@
     <string name="home_toast_remote_error">Ошибка: %1$s</string>
     <string name="home_toast_unknown_remote_error">Не удалось подключиться к серверу</string>
     <string name="home_toast_value_error">Неверные входные данные</string>
+    <string name="home_toast_invalid_point_count">Невалидное количество точек</string>
     <string name="fragment_results_label">Результаты</string>
     <string name="results_layout_save_graph_button_text">Сохранить граф в файл</string>
     <string name="results_layout_graph_mode_label">Режим сглаживания графика</string>
