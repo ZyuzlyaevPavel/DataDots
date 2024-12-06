@@ -23,6 +23,7 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.pvz.datadots.R
+import com.pvz.datadots.databinding.FragmentHomeBinding
 import com.pvz.datadots.databinding.FragmentResultsBinding
 import com.pvz.datadots.domain.model.Point
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,19 +33,20 @@ class ResultsFragment : Fragment() {
 
     private val viewModel: ResultsViewModel by viewModels()
 
-    private val binding by lazy {
-        FragmentResultsBinding.inflate(layoutInflater)
-    }
+    private var _binding: FragmentResultsBinding? = null
+    private val binding get() = _binding!!
 
     private val saveFileLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val uri = result.data?.data
                 if (uri != null) {
-                    saveGraphToFile(binding.lineChart,uri)
+                    saveGraphToFile(binding.lineChart, uri)
                 } else {
-                    Toast.makeText(requireContext(),
-                        getString(R.string.results_toast_no_file), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.results_toast_no_file), Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
@@ -53,12 +55,15 @@ class ResultsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        _binding = FragmentResultsBinding.inflate(layoutInflater)
         viewModel.fetchPointsData()
 
         viewModel.pointList.observe(viewLifecycleOwner) { points ->
             if (points.isEmpty()) {
-                Toast.makeText(requireContext(),
-                    getString(R.string.results_toast_no_data), Toast.LENGTH_SHORT)
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.results_toast_no_data), Toast.LENGTH_SHORT
+                )
                     .show()
                 findNavController().popBackStack()
             }
@@ -100,11 +105,11 @@ class ResultsFragment : Fragment() {
                 }
             }
         }
-        with(binding.saveGraphButton){
+        with(binding.saveGraphButton) {
             setOnClickListener {
                 openFileSaveDialog()
             }
-          }
+        }
 
         return binding.root
     }
@@ -163,24 +168,35 @@ class ResultsFragment : Fragment() {
         saveFileLauncher.launch(intent)
     }
 
-    private fun saveGraphToFile(lineChart: LineChart,uri: Uri) {
+    private fun saveGraphToFile(lineChart: LineChart, uri: Uri) {
         val bitmap = lineChart.chartBitmap
 
         try {
             requireContext().contentResolver.openOutputStream(uri).use { outputStream ->
                 if (outputStream != null) {
                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
-                    Toast.makeText(requireContext(),
-                        getString(R.string.results_toast_success), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.results_toast_success), Toast.LENGTH_SHORT
+                    ).show()
                 } else {
-                    Toast.makeText(requireContext(),
-                        getString(R.string.results_toast_problem), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.results_toast_problem), Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         } catch (e: Exception) {
-            Toast.makeText(requireContext(),
-                getString(R.string.results_toast_error, e.message), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.results_toast_error, e.message), Toast.LENGTH_SHORT
+            ).show()
             e.printStackTrace()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 }

@@ -20,14 +20,14 @@ class HomeFragment : Fragment() {
 
     private val viewModel: HomeViewModel by viewModels()
 
-    private val binding by lazy {
-        FragmentHomeBinding.inflate(layoutInflater)
-    }
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        _binding = FragmentHomeBinding.inflate(layoutInflater)
         return binding.root
     }
 
@@ -45,11 +45,12 @@ class HomeFragment : Fragment() {
         }
 
         viewModel.errorEvent.asLiveData().observe(viewLifecycleOwner) { error ->
-            val message = when(error){
+            val message = when (error) {
                 is PointFetchError.RemoteError -> getString(
                     R.string.home_toast_remote_error,
                     error.responseCode.toString()
                 )
+
                 PointFetchError.UnknownRemoteError -> getString(R.string.home_toast_unknown_remote_error)
                 PointFetchError.ValueError -> getString(R.string.home_toast_value_error)
             }
@@ -66,8 +67,13 @@ class HomeFragment : Fragment() {
                 binding.etPointCount.text.toString().toIntOrNull()
             viewModel.fetchPoints(count)
         }
-        binding.etPointCount.addTextChangedListener{
+        binding.etPointCount.addTextChangedListener {
             viewModel.setPointCount(it.toString())
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
