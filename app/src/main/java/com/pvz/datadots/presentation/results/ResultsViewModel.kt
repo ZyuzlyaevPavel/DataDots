@@ -20,7 +20,7 @@ class ResultsViewModel @Inject constructor(
 
     private val _pointList = MutableLiveData<List<Point>>()
     val pointList: LiveData<List<Point>> get() = _pointList
-    val _spinnerId: MutableStateFlow<Int> = MutableStateFlow(0)
+    private val _spinnerId: MutableStateFlow<Int> = MutableStateFlow(0)
     val spinnerId: StateFlow<Int> get() = _spinnerId.asStateFlow()
 
     fun fetchPointsData() {
