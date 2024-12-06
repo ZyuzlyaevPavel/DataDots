@@ -23,7 +23,6 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.pvz.datadots.R
-import com.pvz.datadots.databinding.FragmentHomeBinding
 import com.pvz.datadots.databinding.FragmentResultsBinding
 import com.pvz.datadots.domain.model.Point
 import dagger.hilt.android.AndroidEntryPoint
