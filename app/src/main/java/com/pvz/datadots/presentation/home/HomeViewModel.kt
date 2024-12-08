@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.pvz.datadots.domain.model.Point
 import com.pvz.datadots.domain.repository.PointsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -40,7 +39,8 @@ class HomeViewModel @Inject constructor(
                     if (response.isSuccessful) {
                         val points = response.body()?.points.orEmpty()
                         Log.d("main", "fetchPoints() is successful")
-                        insertPoints(points)
+                        repository.insertPoints(points)
+                        repository.getAllPoints()
                         _navigationEvent.emit(Unit)
                     } else {
                         Log.e("main", "fetchPoints() is unsuccessful error code ${response.code()}")
@@ -54,12 +54,6 @@ class HomeViewModel @Inject constructor(
                 Log.e("main", "count is null")
                 _errorEvent.emit(PointFetchError.ValueError)
             }
-        }
-    }
-
-    private fun insertPoints(points: List<Point>) {
-        viewModelScope.launch {
-            repository.insertPoints(points)
         }
     }
 }
