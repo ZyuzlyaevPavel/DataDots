@@ -41,19 +41,12 @@ class ResultsFragment : Fragment() {
 
     private val saveFileLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (!isAdded || !isResumed) {
-                return@registerForActivityResult
-            }
             if (result.resultCode == Activity.RESULT_OK) {
                 val uri = result.data?.data
                 if (uri != null) {
                     saveGraphToFile(binding.lineChart, uri)
                 } else {
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.results_toast_no_file),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    makeShortToast(getString(R.string.results_toast_no_file))
                 }
             }
         }
