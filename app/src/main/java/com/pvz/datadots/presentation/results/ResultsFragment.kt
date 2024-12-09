@@ -15,6 +15,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.mikephil.charting.charts.LineChart
@@ -26,6 +27,9 @@ import com.pvz.datadots.R
 import com.pvz.datadots.databinding.FragmentResultsBinding
 import com.pvz.datadots.domain.model.Point
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class ResultsFragment : Fragment() {
@@ -173,30 +177,29 @@ class ResultsFragment : Fragment() {
     }
 
     private fun saveGraphToFile(lineChart: LineChart, uri: Uri) {
-        if (!isAdded || !isResumed) {
-            makeShortToast(getString(R.string.results_toast_problem))
-            return
-        }
-
-        if (lineChart.width <= 0 || lineChart.height <= 0) {
-            makeShortToast(getString(R.string.results_toast_problem))
-            return
-        }
-
-        try {
-            requireContext().contentResolver.openOutputStream(uri).use { outputStream ->
-                if (outputStream != null) {
-                    lineChart.chartBitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
-                    makeShortToast(getString(R.string.results_toast_success))
-                } else {
-                    makeShortToast(getString(R.string.results_toast_problem))
+        viewLifecycleOwner.lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                try {
+                    requireContext().contentResolver.openOutputStream(uri)?.use { outputStream ->
+                        lineChart.chartBitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+                        if (isAdded) {
+                            withContext(Dispatchers.Main) {
+                                makeShortToast(getString(R.string.results_toast_success))
+                            }
+                        }
+                    }
+                } catch (e: Exception) {
+                    if (isAdded) {
+                        withContext(Dispatchers.Main) {
+                            makeShortToast(getString(R.string.results_toast_error, e.message))
+                        }
+                    }
+                    e.printStackTrace()
                 }
             }
-        } catch (e: Exception) {
-            makeShortToast(getString(R.string.results_toast_error, e.message))
-            e.printStackTrace()
         }
     }
+
 
     private fun makeShortToast(toastText: String) {
         Toast.makeText(
@@ -205,7 +208,6 @@ class ResultsFragment : Fragment() {
             Toast.LENGTH_SHORT
         ).show()
     }
-
 
     override fun onDestroy() {
         super.onDestroy()
