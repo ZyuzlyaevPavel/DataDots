@@ -1,5 +1,6 @@
 package com.pvz.datadots.presentation.results
 
+import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -22,6 +23,8 @@ class ResultsViewModel @Inject constructor(
     val pointList: LiveData<List<Point>> get() = _pointList
     private val _spinnerId: MutableStateFlow<Int> = MutableStateFlow(0)
     val spinnerId: StateFlow<Int> get() = _spinnerId.asStateFlow()
+    private val _graphBitmap = MutableLiveData<Bitmap?>()
+    val graphBitmap: LiveData<Bitmap?> get() = _graphBitmap
 
     fun fetchPointsData() {
         viewModelScope.launch {
@@ -40,5 +43,9 @@ class ResultsViewModel @Inject constructor(
         viewModelScope.launch {
             _spinnerId.emit(position)
         }
+    }
+
+    fun setGraphBitmap(bitmap: Bitmap) {
+        _graphBitmap.value = bitmap
     }
 }

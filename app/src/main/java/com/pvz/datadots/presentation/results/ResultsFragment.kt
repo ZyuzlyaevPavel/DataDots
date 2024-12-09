@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
@@ -18,7 +19,6 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
@@ -44,13 +44,14 @@ class ResultsFragment : Fragment() {
             if (result.resultCode == Activity.RESULT_OK) {
                 val uri = result.data?.data
                 if (uri != null) {
-                    saveGraphToFile(binding.lineChart, uri)
+                    viewModel.graphBitmap.value?.let { bitmap ->
+                        saveGraphToFile(bitmap, uri)
+                    } ?: makeShortToast(getString(R.string.results_toast_problem))
                 } else {
                     makeShortToast(getString(R.string.results_toast_no_file))
                 }
             }
         }
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,8 +65,7 @@ class ResultsFragment : Fragment() {
                 Toast.makeText(
                     requireContext(),
                     getString(R.string.results_toast_no_data), Toast.LENGTH_SHORT
-                )
-                    .show()
+                ).show()
                 findNavController().popBackStack()
             }
             with(binding.pointsRecyclerView) {
@@ -82,8 +82,7 @@ class ResultsFragment : Fragment() {
             }
         }
         with(binding.graphModeSpinner) {
-            val smoothingOptions =
-                requireContext().resources.getStringArray(R.array.dropdown_items)
+            val smoothingOptions = requireContext().resources.getStringArray(R.array.dropdown_items)
             val adapter = ArrayAdapter(
                 requireContext(),
                 android.R.layout.simple_spinner_item,
@@ -108,6 +107,8 @@ class ResultsFragment : Fragment() {
         }
         with(binding.saveGraphButton) {
             setOnClickListener {
+                val bitmap = binding.lineChart.chartBitmap
+                viewModel.setGraphBitmap(bitmap)
                 openFileSaveDialog()
             }
         }
@@ -141,8 +142,19 @@ class ResultsFragment : Fragment() {
 
             description.isEnabled = false
             invalidate()
+
+            viewTreeObserver.addOnGlobalLayoutListener(object :
+                ViewTreeObserver.OnGlobalLayoutListener {
+                override fun onGlobalLayout() {
+                    viewTreeObserver.removeOnGlobalLayoutListener(this)
+                    if (isAdded) {
+                        viewModel.setGraphBitmap(chartBitmap)
+                    }
+                }
+            })
         }
     }
+
 
     private fun setLineChartMode(mode: LineDataSet.Mode) {
         val data = binding.lineChart.data
@@ -169,12 +181,12 @@ class ResultsFragment : Fragment() {
         saveFileLauncher.launch(intent)
     }
 
-    private fun saveGraphToFile(lineChart: LineChart, uri: Uri) {
+    private fun saveGraphToFile(bitmap: Bitmap, uri: Uri) {
         viewLifecycleOwner.lifecycleScope.launch {
             withContext(Dispatchers.IO) {
                 try {
                     requireContext().contentResolver.openOutputStream(uri)?.use { outputStream ->
-                        lineChart.chartBitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
                         if (isAdded) {
                             withContext(Dispatchers.Main) {
                                 makeShortToast(getString(R.string.results_toast_success))
@@ -192,7 +204,6 @@ class ResultsFragment : Fragment() {
             }
         }
     }
-
 
     private fun makeShortToast(toastText: String) {
         Toast.makeText(
