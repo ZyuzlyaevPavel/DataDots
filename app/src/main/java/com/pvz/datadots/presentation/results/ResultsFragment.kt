@@ -37,6 +37,9 @@ class ResultsFragment : Fragment() {
 
     private val saveFileLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (!isAdded || !isResumed) {
+                return@registerForActivityResult
+            }
             if (result.resultCode == Activity.RESULT_OK) {
                 val uri = result.data?.data
                 if (uri != null) {
@@ -44,11 +47,13 @@ class ResultsFragment : Fragment() {
                 } else {
                     Toast.makeText(
                         requireContext(),
-                        getString(R.string.results_toast_no_file), Toast.LENGTH_SHORT
+                        getString(R.string.results_toast_no_file),
+                        Toast.LENGTH_SHORT
                     ).show()
                 }
             }
         }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -168,31 +173,39 @@ class ResultsFragment : Fragment() {
     }
 
     private fun saveGraphToFile(lineChart: LineChart, uri: Uri) {
-        val bitmap = lineChart.chartBitmap
+        if (!isAdded || !isResumed) {
+            makeShortToast(getString(R.string.results_toast_problem))
+            return
+        }
+
+        if (lineChart.width <= 0 || lineChart.height <= 0) {
+            makeShortToast(getString(R.string.results_toast_problem))
+            return
+        }
 
         try {
             requireContext().contentResolver.openOutputStream(uri).use { outputStream ->
                 if (outputStream != null) {
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.results_toast_success), Toast.LENGTH_SHORT
-                    ).show()
+                    lineChart.chartBitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+                    makeShortToast(getString(R.string.results_toast_success))
                 } else {
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.results_toast_problem), Toast.LENGTH_SHORT
-                    ).show()
+                    makeShortToast(getString(R.string.results_toast_problem))
                 }
             }
         } catch (e: Exception) {
-            Toast.makeText(
-                requireContext(),
-                getString(R.string.results_toast_error, e.message), Toast.LENGTH_SHORT
-            ).show()
+            makeShortToast(getString(R.string.results_toast_error, e.message))
             e.printStackTrace()
         }
     }
+
+    private fun makeShortToast(toastText: String) {
+        Toast.makeText(
+            requireContext(),
+            toastText,
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
 
     override fun onDestroy() {
         super.onDestroy()
