@@ -1,25 +1,25 @@
 <resources>
     <string name="app_name">DataDots</string>
-    <string name="fragment_home_label">Домашняя страница</string>
-    <string name="graph_label">График точек</string>
-    <string name="home_layout_point_count_hint">Введите количество запрашиваемых точек</string>
-    <string name="home_layout_button_go_text">Поехали!</string>
-    <string name="home_toast_remote_error">Ошибка: %1$s</string>
-    <string name="home_toast_unknown_remote_error">Не удалось подключиться к серверу</string>
-    <string name="home_toast_value_error">Неверные входные данные</string>
-    <string name="home_toast_invalid_point_count">Невалидное количество точек</string>
-    <string name="fragment_results_label">Результаты</string>
-    <string name="results_layout_save_graph_button_text">Сохранить граф в файл</string>
-    <string name="results_layout_graph_mode_label">Режим сглаживания графика</string>
-    <string name="results_toast_no_file">Файл не выбран</string>
-    <string name="results_toast_no_data">Нет данных для отображения</string>
-    <string name="results_toast_success">График сохранен успешно</string>
-    <string name="results_toast_problem">Проблема с сохранением графика</string>
-    <string name="results_toast_error">Ошибка сохранения графика %1$s</string>
+    <string name="fragment_home_label">Home</string>
+    <string name="graph_label">Point Graph</string>
+    <string name="home_layout_point_count_hint">Enter the number of requested points</string>
+    <string name="home_layout_button_go_text">Go!</string>
+    <string name="home_toast_remote_error">Error: %1$s</string>
+    <string name="home_toast_unknown_remote_error">Failed to connect to the server</string>
+    <string name="home_toast_value_error">Invalid input</string>
+    <string name="home_toast_invalid_point_count">Invalid point count</string>
+    <string name="fragment_results_label">Results</string>
+    <string name="results_layout_save_graph_button_text">Save graph to file</string>
+    <string name="results_layout_graph_mode_label">Graph smoothing mode</string>
+    <string name="results_toast_no_file">No file selected</string>
+    <string name="results_toast_no_data">No data to display</string>
+    <string name="results_toast_success">Graph saved successfully</string>
+    <string name="results_toast_problem">Problem saving the graph</string>
+    <string name="results_toast_error">Graph saving error %1$s</string>
 
     <string-array name="dropdown_items">
-        <item>Нет сглаживания</item>
-        <item>Линейное</item>
-        <item>Кубическая кривая Безье</item>
+        <item>No smoothing</item>
+        <item>Linear</item>
+        <item>Cubic Bézier curve</item>
     </string-array>
 </resources>
