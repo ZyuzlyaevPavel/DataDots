@@ -2,6 +2,7 @@ package com.pvz.datadots.di.module
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.pvz.datadots.data.remote.api.FakePointsApi
 import com.pvz.datadots.data.remote.api.PointsApi
 import dagger.Module
 import dagger.Provides
@@ -32,6 +33,12 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun providePointsApi(retrofit: Retrofit): PointsApi =
-        retrofit.create(PointsApi::class.java)
+    fun providePointsApi(retrofit: Retrofit): PointsApi {
+        val useFakeApi = true
+        return if (useFakeApi) {
+            FakePointsApi()
+        } else {
+            retrofit.create(PointsApi::class.java)
+        }
+    }
 }
